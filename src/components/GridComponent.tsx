@@ -21,8 +21,8 @@ const GridComponent = ({
   moveDestination,
 }: Props) => {
   // Only the state is needed, but imported as it needs to be send to node component
-  const [source, setSource] = sourceState;
-  const [destination, setDestination] = destinationState;
+  const [setSource] = sourceState;
+  const [setDestination] = destinationState;
 
   // Resize the grid to fit the screen
   useEffect(() => {
