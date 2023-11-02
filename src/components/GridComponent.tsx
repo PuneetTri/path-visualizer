@@ -21,8 +21,8 @@ const GridComponent = ({
   moveDestination,
 }: Props) => {
   // Only the state is needed, but imported as it needs to be send to node component
-  const [source] = sourceState;
-  const [destination] = destinationState;
+  const [source, setSource] = sourceState;
+  const [destination, setDestination] = destinationState;
 
   // Resize the grid to fit the screen
   useEffect(() => {
@@ -56,20 +56,20 @@ const GridComponent = ({
 
   // Insert the nodes into the grid based on the grid size
   useEffect(() => {
-    // Bug: This code does not work for some reason
     // Rearrange the source and destination nodes as they are getting out ouf bounds,
     // might change it later to ensure they are within bounds and are not hard coded to the corners
-    // setSource([0, 0]);
-    // setDestination([gridSize - 1, gridSize - 1]);
+    setSource([0, 0]);
+    setDestination([gridSize - 1, gridSize - 1]);
+
     const temp = [];
 
     // Resize the grid based on the new grid size
     for (let i = 0; i < gridSize; i++) {
       const row = [];
       for (let j = 0; j < gridSize; j++) {
-        if (i === source[0] && j === source[1]) {
+        if (i === 0 && j === 0) {
           row.push("source");
-        } else if (i === destination[0] && j === destination[1]) {
+        } else if (i === gridSize - 1 && j === gridSize - 1) {
           row.push("destination");
         } else {
           row.push("unvisited");
