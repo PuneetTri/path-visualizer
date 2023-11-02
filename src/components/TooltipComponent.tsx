@@ -1,5 +1,3 @@
-import React from "react";
-
 const TooltipComponent = () => {
   return (
     <div className="mx-auto w-full grid grid-cols-3 gap-1">
