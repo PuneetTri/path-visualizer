@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
+
+// Components
 import HeaderComponent from "./components/HeaderComponent";
 import GridComponent from "./components/GridComponent";
+import TooltipComponent from "./components/TooltipComponent";
+
+// Algorithms
 import dfs from "./algorithms/dfs";
 import bfs from "./algorithms/bfs";
 import dijkstra from "./algorithms/djikstra";
 import astar from "./algorithms/astar";
-import TooltipComponent from "./components/TooltipComponent";
+import AlgorithmPickerComponent from "./components/AlgorithmPickerComponent";
 
 function App() {
   const [grid, setGrid] = useState<any>([]);
@@ -19,70 +24,7 @@ function App() {
   const [moveDestination, setMoveDestination] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(true);
 
-  const visualizeAlgorithm = async (e: any) => {
-    e.target.disabled = true;
-    // Change style of the button to indicate that the algorithm is running
-    e.target.classList.add("bg-gray-500");
-    e.target.classList.remove("bg-green-500");
-    e.target.innerText = "Visualizing...";
-
-    if (algorithm === "Depth First Search") {
-      await dfs(grid, setGrid, source, destination, 101 - speed);
-    } else if (algorithm === "Breadth First Search") {
-      await bfs(grid, setGrid, source, destination, 101 - speed);
-    } else if (algorithm === "Dijkstra's Algorithm") {
-      await dijkstra(grid, setGrid, source, destination, 101 - speed);
-    } else if (algorithm === "A* Search") {
-      await astar(grid, setGrid, source, destination, 101 - speed);
-    }
-
-    e.target.disabled = false;
-    setClear(false);
-  };
-
-  const resetGrid = () => {
-    // Check the grid and change all the visited nodes into unvisited nodes
-    const temp = grid.slice();
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        if (temp[i][j] === "visited" || temp[i][j] === "path") {
-          temp[i][j] = "unvisited";
-        }
-      }
-    }
-
-    setGrid(temp);
-    setClear(true);
-  };
-
-  const clearBlocks = () => {
-    const temp = grid.slice();
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        if (temp[i][j] === "block") {
-          temp[i][j] = "unvisited";
-        }
-      }
-    }
-
-    setGrid(temp);
-  };
-
-  const addMaze = () => {
-    clearBlocks();
-    const temp = grid.slice();
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        if (temp[i][j] === "unvisited") {
-          // Create a 30% random chance of adding a block
-          if (Math.random() < 0.3) temp[i][j] = "block";
-        }
-      }
-    }
-
-    setGrid(temp);
-  };
-
+  // Set the description based on the selected algorithm
   useEffect(() => {
     switch (algorithm) {
       case "Depth First Search":
@@ -108,22 +50,92 @@ function App() {
     }
   }, [algorithm]);
 
+  // Visualize the algorithm
+  const visualizeAlgorithm = async (e: any) => {
+    e.target.disabled = true; // Disable the button to prevent multiple clicks
+    // Change style of the button to indicate that the algorithm is running
+    e.target.classList.add("bg-gray-500");
+    e.target.classList.remove("bg-green-500");
+    e.target.innerText = "Visualizing...";
+
+    // Visualize the algorithm based on the selected algorithm
+    switch (algorithm) {
+      case "Depth First Search":
+        // 101 - speed, because smaller the slider value, slower the speed
+        await dfs(grid, setGrid, source, destination, 101 - speed);
+        break;
+      case "Breadth First Search":
+        await bfs(grid, setGrid, source, destination, 101 - speed);
+        break;
+      case "Dijkstra's Algorithm":
+        await dijkstra(grid, setGrid, source, destination, 101 - speed);
+        break;
+      case "A* Search":
+        await astar(grid, setGrid, source, destination, 101 - speed);
+        break;
+    }
+
+    // Change the style of the button back to normal
+    e.target.disabled = false;
+    setClear(false); // Finally set grid to be not clear
+  };
+
+  // Reset the grid, but keep the source, destination nodes and the blocks
+  const resetGrid = () => {
+    // Check the grid and change all the visited nodes into unvisited nodes
+    const temp = grid.slice();
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        if (temp[i][j] === "visited" || temp[i][j] === "path") {
+          temp[i][j] = "unvisited";
+        }
+      }
+    }
+
+    setGrid(temp);
+    setClear(true);
+  };
+
+  // Clear all the blocks placed on the grid
+  const clearBlocks = () => {
+    const temp = grid.slice();
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        if (temp[i][j] === "block") {
+          temp[i][j] = "unvisited";
+        }
+      }
+    }
+
+    setGrid(temp);
+  };
+
+  // Add random blocks to the grid
+  const addRandomBlocks = () => {
+    clearBlocks();
+    const temp = grid.slice();
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        if (temp[i][j] === "unvisited") {
+          // Create a 30% random chance of adding a block
+          if (Math.random() < 0.3) temp[i][j] = "block";
+        }
+      }
+    }
+
+    setGrid(temp);
+  };
+
   return (
     <div>
       <HeaderComponent />
 
       <div className="py-16 lg:pb-0">
         <div className="m-4 block lg:hidden">
-          <select
-            className="w-full outline-none text-3xl font-bold -mx-1"
-            value={algorithm}
-            onChange={(e) => setAlgorithm(e.target.value)}
-          >
-            <option>Breadth First Search</option>
-            <option>Depth First Search</option>
-            <option>Dijkstra's Algorithm</option>
-            <option>A* Search</option>
-          </select>
+          <AlgorithmPickerComponent
+            algorithm={algorithm}
+            setAlgorithm={setAlgorithm}
+          />
         </div>
 
         <main className="flex flex-col space-y-4 p-4 lg:flex-row lg:space-y-0">
@@ -139,16 +151,13 @@ function App() {
 
           <div className="lg:w-1/2 space-y-4">
             <div>
-              <select
-                className="w-full outline-none text-3xl font-bold hidden lg:block -mx-1"
-                value={algorithm}
-                onChange={(e) => setAlgorithm(e.target.value)}
-              >
-                <option>Breadth First Search</option>
-                <option>Depth First Search</option>
-                <option>Dijkstra's Algorithm</option>
-                <option>A* Search</option>
-              </select>
+              <div className="hidden lg:block">
+                <AlgorithmPickerComponent
+                  algorithm={algorithm}
+                  setAlgorithm={setAlgorithm}
+                />
+              </div>
+
               <p>{description}</p>
             </div>
 
@@ -189,10 +198,10 @@ function App() {
               </button>
 
               <button
-                onClick={addMaze}
+                onClick={addRandomBlocks}
                 className="w-full bg-blue-500 p-4 text-white rounded-lg"
               >
-                Add Maze
+                Add Random Blocks
               </button>
             </div>
 

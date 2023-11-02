@@ -20,16 +20,18 @@ const GridComponent = ({
   destinationState,
   moveDestination,
 }: Props) => {
-  const [source, setSource] = sourceState;
-  const [destination, setDestination] = destinationState;
+  // Only the state is needed, but imported as it needs to be send to node component
+  const [source] = sourceState;
+  const [destination] = destinationState;
 
   // Resize the grid to fit the screen
   useEffect(() => {
     const handleResize = () => {
       const grid = document.getElementById("grid");
-      const headerHeight = 100; // Adjust this value as needed for your header
-      const padding = 16; // 1rem = 16px
+      const headerHeight = 100; // Header is rough;y 100px, so therfore the space
+      const padding = 16; // Addition 1 rem padding
 
+      // Resize the gird based on the window size
       if (grid) {
         const windowHeight = window.innerHeight;
         const availableHeight = windowHeight - headerHeight - 2 * padding;
@@ -43,8 +45,10 @@ const GridComponent = ({
 
     handleResize();
 
+    // Add event listener to resize the grid when the window is resized
     window.addEventListener("resize", handleResize);
 
+    // Remove the event listener when the component is unmounted
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -59,8 +63,7 @@ const GridComponent = ({
     // setDestination([gridSize - 1, gridSize - 1]);
     const temp = [];
 
-    console.log(source, destination);
-
+    // Resize the grid based on the new grid size
     for (let i = 0; i < gridSize; i++) {
       const row = [];
       for (let j = 0; j < gridSize; j++) {
@@ -84,6 +87,7 @@ const GridComponent = ({
         id="grid"
         style={{
           display: "grid",
+          // Create a grid of size gridSize x gridSize, therfore the rows and columns are repeated
           gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${gridSize}, minmax(0, 1fr))`,
         }}
