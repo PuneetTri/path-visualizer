@@ -1,10 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-  BsChevronLeft,
-  BsChevronRight,
-  BsChevronUp,
-  BsChevronDown,
-} from "react-icons/bs";
 
 // Components
 import HeaderComponent from "./components/HeaderComponent";
