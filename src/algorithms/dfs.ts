@@ -68,17 +68,17 @@ const updateNodesToPath = async (
   speed: number
 ) => {
   return new Promise((resolve) => {
-    let i = path.length - 1;
+    let i = 1;
 
     const updateNode = () => {
-      if (i > 0) {
+      if (i < path.length) {
         const [x, y] = path[i];
         setGrid((prevGrid: any) => {
           const newGrid = prevGrid.slice();
           newGrid[x][y] = "path";
           return newGrid;
         });
-        i--;
+        i++;
         setTimeout(updateNode, speed);
       } else {
         resolve(true); // Resolves when all nodes are updated to 'path'

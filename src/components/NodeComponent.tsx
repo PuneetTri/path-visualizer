@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 type Props = {
+  uid: string;
   type?: string;
   setGrid: any;
   position: number[];
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const NodeComponent = ({
+  uid,
   type,
   setGrid,
   position,
@@ -112,6 +114,7 @@ const NodeComponent = ({
     case "source":
       return (
         <div
+          id={uid}
           onClick={() => setIsSourceMoving((prev: boolean) => !prev)}
           className={`border-[1px] border-black ${
             isSourceMoving ? "bg-green-700" : "bg-green-500"
@@ -123,6 +126,7 @@ const NodeComponent = ({
     case "destination":
       return (
         <div
+          id={uid}
           onClick={() => setIsDestinationMoving((prev: boolean) => !prev)}
           className={`border-[1px] border-black ${
             isDestinationMoving ? "bg-red-700" : "bg-red-500"
@@ -132,16 +136,21 @@ const NodeComponent = ({
 
     // Visited node
     case "visited":
-      return <div className="border-[1px] border-black bg-gray-500"></div>;
+      return (
+        <div id={uid} className="border-[1px] border-black bg-gray-500"></div>
+      );
 
     // Path node
     case "path":
-      return <div className="border-[1px] border-black bg-yellow-500"></div>;
+      return (
+        <div id={uid} className="border-[1px] border-black bg-yellow-500"></div>
+      );
 
     // Block node
     case "block":
       return (
         <div
+          id={uid}
           onMouseOver={handleHover}
           onClick={handleClick}
           className="border-[1px] border-black bg-black"
@@ -152,6 +161,7 @@ const NodeComponent = ({
     default:
       return (
         <div
+          id={uid}
           onMouseOver={handleHover}
           onClick={handleClick}
           className="border-[1px] border-black bg-white"

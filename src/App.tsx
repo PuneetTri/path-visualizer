@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import {
+  BsChevronLeft,
+  BsChevronRight,
+  BsChevronUp,
+  BsChevronDown,
+} from "react-icons/bs";
 
 // Components
 import HeaderComponent from "./components/HeaderComponent";
@@ -11,16 +17,17 @@ import bfs from "./algorithms/bfs";
 import dijkstra from "./algorithms/djikstra";
 import astar from "./algorithms/astar";
 import AlgorithmPickerComponent from "./components/AlgorithmPickerComponent";
+import addMaze from "./algorithms/addMaze";
 
 function App() {
   const [grid, setGrid] = useState<any>([]);
   const [gridSize, setGridSize] = useState(10);
   const [speed, setSpeed] = useState(50);
-  const [algorithm, setAlgorithm] = useState("Dijkstra's Algorithm");
+  const [algorithm, setAlgorithm] = useState("Breadth First Search");
   const [description, setDescription] = useState<string>("");
-  const [source, setSource] = useState([0, 0]);
+  const [source, setSource] = useState([1, 1]);
   const [moveSource, setMoveSource] = useState<boolean>(false);
-  const [destination, setDestination] = useState([gridSize - 1, gridSize - 1]);
+  const [destination, setDestination] = useState([gridSize - 2, gridSize - 2]);
   const [moveDestination, setMoveDestination] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(true);
 
@@ -110,22 +117,6 @@ function App() {
     setGrid(temp);
   };
 
-  // Add random blocks to the grid
-  const addRandomBlocks = () => {
-    clearBlocks();
-    const temp = grid.slice();
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        if (temp[i][j] === "unvisited") {
-          // Create a 30% random chance of adding a block
-          if (Math.random() < 0.3) temp[i][j] = "block";
-        }
-      }
-    }
-
-    setGrid(temp);
-  };
-
   return (
     <div>
       <HeaderComponent />
@@ -198,10 +189,12 @@ function App() {
               </button>
 
               <button
-                onClick={addRandomBlocks}
+                onClick={async () => {
+                  addMaze(grid, setGrid, source, destination);
+                }}
                 className="w-full bg-blue-500 p-4 text-white rounded-lg"
               >
-                Add Random Blocks
+                Add Maze
               </button>
             </div>
 

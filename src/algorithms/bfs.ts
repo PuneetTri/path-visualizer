@@ -113,6 +113,12 @@ const updateNodesToPath = async (
         setGrid((prevGrid: any) => {
           const newGrid = prevGrid.slice();
           newGrid[x][y] = "path";
+
+          // Not working right now, but I want to add arrows to the path
+          // const element = document.getElementById(`${x}-${y}`);
+          // if (element) {
+          //   element.innerHTML = "<BsChevronLeft class='w-full h-full block' />";
+          // }
           return newGrid;
         });
         i++;

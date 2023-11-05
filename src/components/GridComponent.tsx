@@ -20,7 +20,7 @@ const GridComponent = ({
   destinationState,
   moveDestination,
 }: Props) => {
-  // Only the state is needed, but imported as it needs to be send to node component
+  // Only the setter function is needed, but imported as it needs to be send to node component
   const setSource = sourceState[1];
   const setDestination = destinationState[1];
 
@@ -58,8 +58,8 @@ const GridComponent = ({
   useEffect(() => {
     // Rearrange the source and destination nodes as they are getting out ouf bounds,
     // might change it later to ensure they are within bounds and are not hard coded to the corners
-    setSource([0, 0]);
-    setDestination([gridSize - 1, gridSize - 1]);
+    setSource([1, 1]);
+    setDestination([gridSize - 2, gridSize - 2]);
 
     const temp = [];
 
@@ -67,9 +67,9 @@ const GridComponent = ({
     for (let i = 0; i < gridSize; i++) {
       const row = [];
       for (let j = 0; j < gridSize; j++) {
-        if (i === 0 && j === 0) {
+        if (i === 1 && j === 1) {
           row.push("source");
-        } else if (i === gridSize - 1 && j === gridSize - 1) {
+        } else if (i === gridSize - 2 && j === gridSize - 2) {
           row.push("destination");
         } else {
           row.push("unvisited");
@@ -97,6 +97,7 @@ const GridComponent = ({
           row.map((type, colIndex) => (
             <NodeComponent
               key={`${rowIndex}-${colIndex}`}
+              uid={`${rowIndex}-${colIndex}`}
               type={type}
               setGrid={setGrid}
               position={[rowIndex, colIndex]}
