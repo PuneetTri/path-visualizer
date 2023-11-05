@@ -150,11 +150,14 @@ function App() {
 
             <div>
               <div className="flex flex-col">
-                <label>Grid Size ({`${gridSize}x${gridSize}`})</label>
+                <label>
+                  Grid Size ({`${gridSize}x${gridSize}`}){" "}
+                  {`>25 size may lag in few systems`}
+                </label>
                 <input
                   type="range"
                   min={5}
-                  max={25}
+                  max={50}
                   step={5}
                   value={gridSize}
                   onChange={(e: any) => setGridSize(e.target.value)}
