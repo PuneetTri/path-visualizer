@@ -152,7 +152,7 @@ function App() {
               <div className="flex flex-col">
                 <label>
                   Grid Size ({`${gridSize}x${gridSize}`}){" "}
-                  {`>25 size may lag in few systems`}
+                  {`>25 size may lag on few systems`}
                 </label>
                 <input
                   type="range"
