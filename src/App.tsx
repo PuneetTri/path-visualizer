@@ -129,6 +129,8 @@ function App() {
 
     setGrid(temp);
     setClear(true);
+    setPathDistance(0);
+    setNodesVisitedCount(0);
   };
 
   // Clear all the blocks placed on the grid
