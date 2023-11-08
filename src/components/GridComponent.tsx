@@ -9,6 +9,8 @@ type Props = {
   moveSource: any;
   destinationState: any;
   moveDestination: any;
+  nodesVisitedCount: number;
+  pathDistance: number;
 };
 
 const GridComponent = ({
@@ -19,6 +21,8 @@ const GridComponent = ({
   moveSource,
   destinationState,
   moveDestination,
+  nodesVisitedCount,
+  pathDistance,
 }: Props) => {
   // Only the setter function is needed, but imported as it needs to be send to node component
   const setSource = sourceState[1];
@@ -82,7 +86,7 @@ const GridComponent = ({
   }, [gridSize]);
 
   return (
-    <div className="lg:w-1/2 flex justify-center items-start">
+    <div className="lg:w-1/2 flex flex-col justify-center items-start">
       <div
         id="grid"
         style={{
@@ -91,7 +95,7 @@ const GridComponent = ({
           gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${gridSize}, minmax(0, 1fr))`,
         }}
-        className="border-[1px] border-black grid-rows-5"
+        className="border-[1px] border-black grid-rows-5 self-center"
       >
         {grid.map((row, rowIndex) =>
           row.map((type, colIndex) => (
@@ -108,6 +112,13 @@ const GridComponent = ({
             />
           ))
         )}
+      </div>
+
+      <div className="self-center flex flex-row justify-between">
+        <p style={{ marginRight: "10px" }}>
+          Nodes Visited: {nodesVisitedCount}
+        </p>
+        <p>Shortest Path Distance: {pathDistance}</p>
       </div>
     </div>
   );

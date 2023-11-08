@@ -3,7 +3,9 @@ const dfs = async (
   setGrid: any,
   source: number[],
   destination: number[],
-  speed: number
+  speed: number,
+  setNodesVisitedCount: any,
+  setPathDistance: any
 ): Promise<boolean> => {
   return new Promise((resolve) => {
     const visited = new Set<string>();
@@ -20,8 +22,14 @@ const dfs = async (
         const [row, col] = stack.pop() as number[];
 
         if (row === destination[0] && col === destination[1]) {
-          const found = await updateNodesToPath([...path], setGrid, speed);
+          const found = await updateNodesToPath(
+            [...path],
+            setGrid,
+            speed,
+            setPathDistance
+          );
           if (found) {
+            setNodesVisitedCount((prev: number) => prev + 1);
             resolve(true); // Destination found
           }
           return;
@@ -35,6 +43,7 @@ const dfs = async (
 
         visited.add(current);
         path.push([row, col]);
+        setNodesVisitedCount((prev: number) => prev + 1);
 
         setGrid((prevGrid: string[][]) => {
           const newGrid = prevGrid.slice();
@@ -65,13 +74,15 @@ const dfs = async (
 const updateNodesToPath = async (
   path: number[][],
   setGrid: any,
-  speed: number
+  speed: number,
+  setPathDistance: any
 ) => {
   return new Promise((resolve) => {
     let i = 1;
 
     const updateNode = () => {
       if (i < path.length) {
+        setPathDistance((prev: number) => prev + 1);
         const [x, y] = path[i];
         setGrid((prevGrid: any) => {
           const newGrid = prevGrid.slice();

@@ -3,9 +3,12 @@ const dijkstra = async (
   setGrid: any,
   source: number[],
   destination: number[],
-  speed: number
+  speed: number,
+  setNodesVisitedCount: any,
+  setPathDistance: any
 ): Promise<boolean> => {
   return new Promise((resolve) => {
+    let visited = new Set();
     const distances: { [key: string]: number } = {};
     const path: { [key: string]: number[] } = {};
     const pq = new PriorityQueue();
@@ -33,10 +36,12 @@ const dijkstra = async (
             path,
             destination,
             setGrid,
-            speed
+            speed,
+            setPathDistance
           );
           if (found) {
             resolve(true); // Destination found
+            setNodesVisitedCount((prevCount: number) => prevCount - 1);
           }
           return;
         }
@@ -59,6 +64,7 @@ const dijkstra = async (
               distances[current] = cost;
               path[current] = [row, col];
               pq.enqueue([newRow, newCol], cost);
+              setNodesVisitedCount((prevCount: number) => prevCount + 1);
             }
           }
         }
@@ -119,7 +125,8 @@ const updateNodesToPath = async (
   path: { [key: string]: number[] },
   destination: number[],
   setGrid: any,
-  speed: number
+  speed: number,
+  setPathDistance: any
 ) => {
   return new Promise((resolve) => {
     const pathNodes: any = [];
@@ -134,6 +141,7 @@ const updateNodesToPath = async (
 
     const updateNode = () => {
       if (i < pathNodes.length) {
+        setPathDistance((prevDistance: number) => prevDistance + 1);
         const [x, y] = pathNodes[i];
         setGrid((prevGrid: any) => {
           const newGrid = prevGrid.slice();

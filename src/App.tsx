@@ -24,6 +24,8 @@ function App() {
   const [destination, setDestination] = useState([gridSize - 2, gridSize - 2]);
   const [moveDestination, setMoveDestination] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(true);
+  const [nodesVisitedCount, setNodesVisitedCount] = useState<number>(0);
+  const [pathDistance, setPathDistance] = useState<number>(0);
 
   // Set the description based on the selected algorithm
   useEffect(() => {
@@ -63,16 +65,48 @@ function App() {
     switch (algorithm) {
       case "Depth First Search":
         // 101 - speed, because smaller the slider value, slower the speed
-        await dfs(grid, setGrid, source, destination, 101 - speed);
+        await dfs(
+          grid,
+          setGrid,
+          source,
+          destination,
+          101 - speed,
+          setNodesVisitedCount,
+          setPathDistance
+        );
         break;
       case "Breadth First Search":
-        await bfs(grid, setGrid, source, destination, 101 - speed);
+        await bfs(
+          grid,
+          setGrid,
+          source,
+          destination,
+          101 - speed,
+          setNodesVisitedCount,
+          setPathDistance
+        );
         break;
       case "Dijkstra's Algorithm":
-        await dijkstra(grid, setGrid, source, destination, 101 - speed);
+        await dijkstra(
+          grid,
+          setGrid,
+          source,
+          destination,
+          101 - speed,
+          setNodesVisitedCount,
+          setPathDistance
+        );
         break;
       case "A* Search":
-        await astar(grid, setGrid, source, destination, 101 - speed);
+        await astar(
+          grid,
+          setGrid,
+          source,
+          destination,
+          101 - speed,
+          setNodesVisitedCount,
+          setPathDistance
+        );
         break;
     }
 
@@ -132,6 +166,8 @@ function App() {
             moveSource={[moveSource, setMoveSource]}
             destinationState={[destination, setDestination]}
             moveDestination={[moveDestination, setMoveDestination]}
+            nodesVisitedCount={nodesVisitedCount}
+            pathDistance={pathDistance}
           />
 
           <div className="lg:w-1/2 space-y-4">

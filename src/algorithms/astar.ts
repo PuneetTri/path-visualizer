@@ -3,7 +3,9 @@ const astar = async (
   setGrid: any,
   source: number[],
   destination: number[],
-  speed: number
+  speed: number,
+  setNodesVisitedCount: any,
+  setPathDistance: any
 ): Promise<boolean> => {
   return new Promise((resolve) => {
     const pq = new PriorityQueue();
@@ -20,6 +22,7 @@ const astar = async (
     costSoFar[`${source[0]},${source[1]}`] = 0;
 
     const explore = () => {
+      setNodesVisitedCount((prevCount: number) => prevCount + 1);
       if (pq.isEmpty()) {
         resolve(false); // Destination not found
         return;
@@ -33,7 +36,8 @@ const astar = async (
             cameFrom,
             destination,
             setGrid,
-            speed
+            speed,
+            setPathDistance
           );
           if (found) {
             resolve(true); // Destination found
@@ -128,7 +132,8 @@ const updateNodesToPath = async (
   cameFrom: { [key: string]: number[] },
   destination: number[],
   setGrid: any,
-  speed: number
+  speed: number,
+  setPathDistance: any
 ) => {
   return new Promise((resolve) => {
     const pathNodes: any = [];
@@ -143,6 +148,7 @@ const updateNodesToPath = async (
 
     const updateNode = () => {
       if (i < pathNodes.length) {
+        setPathDistance((prevDistance: number) => prevDistance + 1);
         const [x, y] = pathNodes[i];
         setGrid((prevGrid: any) => {
           const newGrid = prevGrid.slice();
