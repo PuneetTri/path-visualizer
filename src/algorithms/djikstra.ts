@@ -8,7 +8,6 @@ const dijkstra = async (
   setPathDistance: any
 ): Promise<boolean> => {
   return new Promise((resolve) => {
-    let visited = new Set();
     const distances: { [key: string]: number } = {};
     const path: { [key: string]: number[] } = {};
     const pq = new PriorityQueue();
