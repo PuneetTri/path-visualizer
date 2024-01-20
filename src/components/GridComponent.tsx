@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import NodeComponent from "./NodeComponent";
-
-import { MdOutlineFlag } from "react-icons/md";
 
 type Props = {
   grid: any[][];

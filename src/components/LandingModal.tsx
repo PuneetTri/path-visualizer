@@ -9,7 +9,7 @@ const LandingModal = ({
   isLandingModalVisibile,
   setIsLandingModalVisibile,
 }: Props) => {
-  const [currentPage, setCurrentPage] = useState<String>("landing");
+  const [currentPage, setCurrentPage] = useState<string>("landing");
 
   useEffect(() => console.log(currentPage), [currentPage]);
   return (

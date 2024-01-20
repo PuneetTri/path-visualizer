@@ -12,7 +12,7 @@ import dijkstra from "./algorithms/djikstra";
 import astar from "./algorithms/astar";
 import AlgorithmPickerComponent from "./components/AlgorithmPickerComponent";
 import addMaze from "./algorithms/addMaze";
-import LandingModal from "./components/landingModal";
+import LandingModal from "./components/LandingModal";
 
 function App() {
   const [grid, setGrid] = useState<any>([]);
