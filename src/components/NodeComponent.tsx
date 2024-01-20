@@ -9,6 +9,8 @@ type Props = {
   moveSource: any;
   destinationState: any;
   moveDestination: any;
+  isKeyDown?: boolean;
+  setIsKeyDown?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const NodeComponent = ({
@@ -86,13 +88,15 @@ const NodeComponent = ({
     if (type === "unvisited") {
       setGrid((prevGrid: any) => {
         const newGrid = prevGrid.slice();
+        // If the checkpoint key is not down, then set a block else set a checkpoint
         newGrid[position[0]][position[1]] = "block";
+        // else newGrid[position[0]][position[1]] = "checkpoint";
         return newGrid;
       });
     }
 
     // If the node is a block, then toggle it to unvisited
-    if (type === "block") {
+    if (type === "block" || type === "checkpoint") {
       setGrid((prevGrid: any) => {
         const newGrid = prevGrid.slice();
         newGrid[position[0]][position[1]] = "unvisited";
@@ -154,6 +158,17 @@ const NodeComponent = ({
           onMouseOver={handleHover}
           onClick={handleClick}
           className="border-[1px] border-black bg-black"
+        ></div>
+      );
+
+    // Checkpoint block
+    case "checkpoint":
+      return (
+        <div
+          id={uid}
+          onMouseOver={handleHover}
+          onClick={handleClick}
+          className="border-[1px] border-black bg-orange-500"
         ></div>
       );
 

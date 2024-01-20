@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import NodeComponent from "./NodeComponent";
+
+import { MdOutlineFlag } from "react-icons/md";
 
 type Props = {
   grid: any[][];
@@ -27,6 +29,9 @@ const GridComponent = ({
   // Only the setter function is needed, but imported as it needs to be send to node component
   const setSource = sourceState[1];
   const setDestination = destinationState[1];
+
+  // Checkpoint setter state
+  // const [isKeyDown, setIsKeyDown] = useState<boolean>(false);
 
   // Resize the grid to fit the screen
   useEffect(() => {
@@ -85,8 +90,24 @@ const GridComponent = ({
     setGrid(temp);
   }, [gridSize]);
 
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     if (e.key === "c" || e.key === "C") {
+  //       setIsKeyDown((prevState) => {
+  //         return !prevState;
+  //       });
+  //     }
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, []);
+
   return (
-    <div className="lg:w-1/2 flex flex-col justify-center items-start">
+    <div className={`lg:w-1/2 flex flex-col justify-center items-start`}>
       <div
         id="grid"
         style={{

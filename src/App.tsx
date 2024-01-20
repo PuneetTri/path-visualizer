@@ -12,11 +12,12 @@ import dijkstra from "./algorithms/djikstra";
 import astar from "./algorithms/astar";
 import AlgorithmPickerComponent from "./components/AlgorithmPickerComponent";
 import addMaze from "./algorithms/addMaze";
+import LandingModal from "./components/landingModal";
 
 function App() {
   const [grid, setGrid] = useState<any>([]);
   const [gridSize, setGridSize] = useState(10);
-  const [speed, setSpeed] = useState(50);
+  const [speed, setSpeed] = useState(75);
   const [algorithm, setAlgorithm] = useState("Breadth First Search");
   const [description, setDescription] = useState<string>("");
   const [source, setSource] = useState([1, 1]);
@@ -26,6 +27,8 @@ function App() {
   const [clear, setClear] = useState<boolean>(true);
   const [nodesVisitedCount, setNodesVisitedCount] = useState<number>(0);
   const [pathDistance, setPathDistance] = useState<number>(0);
+  const [isLandingModalVisibile, setIsLandingModalVisibile] =
+    useState<boolean>(true);
 
   // Set the description based on the selected algorithm
   useEffect(() => {
@@ -52,6 +55,18 @@ function App() {
         break;
     }
   }, [algorithm]);
+
+  useEffect(() => {
+    if (gridSize >= 30) {
+      setSpeed(100);
+    } else if (gridSize >= 20) {
+      setSpeed(75);
+    } else if (gridSize >= 10) {
+      setSpeed(50);
+    } else {
+      setSpeed(10);
+    }
+  }, [gridSize]);
 
   // Visualize the algorithm
   const visualizeAlgorithm = async (e: any) => {
@@ -148,61 +163,62 @@ function App() {
   };
 
   return (
-    <div>
-      <HeaderComponent />
+    <>
+      <div>
+        <HeaderComponent />
 
-      <div className="py-16 lg:pb-0">
-        <div className="m-4 block lg:hidden">
-          <AlgorithmPickerComponent
-            algorithm={algorithm}
-            setAlgorithm={setAlgorithm}
-          />
-        </div>
+        <div className="py-16 lg:pb-0">
+          <div className="m-4 block lg:hidden">
+            <AlgorithmPickerComponent
+              algorithm={algorithm}
+              setAlgorithm={setAlgorithm}
+            />
+          </div>
 
-        <main className="flex flex-col space-y-4 p-4 lg:flex-row lg:space-y-0">
-          <GridComponent
-            grid={grid}
-            setGrid={setGrid}
-            gridSize={gridSize}
-            sourceState={[source, setSource]}
-            moveSource={[moveSource, setMoveSource]}
-            destinationState={[destination, setDestination]}
-            moveDestination={[moveDestination, setMoveDestination]}
-            nodesVisitedCount={nodesVisitedCount}
-            pathDistance={pathDistance}
-          />
+          <main className="flex flex-col space-y-4 p-4 lg:flex-row lg:space-y-0">
+            <GridComponent
+              grid={grid}
+              setGrid={setGrid}
+              gridSize={gridSize}
+              sourceState={[source, setSource]}
+              moveSource={[moveSource, setMoveSource]}
+              destinationState={[destination, setDestination]}
+              moveDestination={[moveDestination, setMoveDestination]}
+              nodesVisitedCount={nodesVisitedCount}
+              pathDistance={pathDistance}
+            />
 
-          <div className="lg:w-1/2 space-y-4">
-            <div>
-              <div className="hidden lg:block">
-                <AlgorithmPickerComponent
-                  algorithm={algorithm}
-                  setAlgorithm={setAlgorithm}
-                />
+            <div className="lg:w-1/2 space-y-4">
+              <div>
+                <div className="hidden lg:block">
+                  <AlgorithmPickerComponent
+                    algorithm={algorithm}
+                    setAlgorithm={setAlgorithm}
+                  />
+                </div>
+
+                <p>{description}</p>
               </div>
 
-              <p>{description}</p>
-            </div>
+              <TooltipComponent />
 
-            <TooltipComponent />
+              <div>
+                <div className="flex flex-col">
+                  <label>
+                    Grid Size ({`${gridSize}x${gridSize}`}){" "}
+                    {gridSize > 25 && `May lag on few systems`}
+                  </label>
+                  <input
+                    type="range"
+                    min={5}
+                    max={50}
+                    step={5}
+                    value={gridSize}
+                    onChange={(e: any) => setGridSize(e.target.value)}
+                  />
+                </div>
 
-            <div>
-              <div className="flex flex-col">
-                <label>
-                  Grid Size ({`${gridSize}x${gridSize}`}){" "}
-                  {gridSize > 25 && `May lag on few systems`}
-                </label>
-                <input
-                  type="range"
-                  min={5}
-                  max={50}
-                  step={5}
-                  value={gridSize}
-                  onChange={(e: any) => setGridSize(e.target.value)}
-                />
-              </div>
-
-              <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                 <label>Speed ({`${speed}%`})</label>
                 <input
                   type="range"
@@ -212,39 +228,45 @@ function App() {
                   value={speed}
                   onChange={(e: any) => setSpeed(e.target.value)}
                 />
+              </div> */}
               </div>
-            </div>
 
-            <div className="flex flex-row space-x-2">
+              <div className="flex flex-row space-x-2">
+                <button
+                  onClick={clearBlocks}
+                  className="w-full bg-blue-500 p-4 text-white rounded-lg"
+                >
+                  Clear Blocks
+                </button>
+
+                <button
+                  onClick={async () => {
+                    addMaze(grid, setGrid, source, destination);
+                  }}
+                  className="w-full bg-blue-500 p-4 text-white rounded-lg"
+                >
+                  Add Maze
+                </button>
+              </div>
+
               <button
-                onClick={clearBlocks}
-                className="w-full bg-blue-500 p-4 text-white rounded-lg"
+                onClick={clear ? visualizeAlgorithm : resetGrid}
+                className={`fixed lg:relative bottom-0 left-0 w-screen lg:w-full ${
+                  clear ? "bg-green-500" : "bg-red-500"
+                } p-4 text-white lg:rounded-lg`}
               >
-                Clear Blocks
-              </button>
-
-              <button
-                onClick={async () => {
-                  addMaze(grid, setGrid, source, destination);
-                }}
-                className="w-full bg-blue-500 p-4 text-white rounded-lg"
-              >
-                Add Maze
+                {clear ? "Visualize Algorithm" : "Clear Grid"}
               </button>
             </div>
-
-            <button
-              onClick={clear ? visualizeAlgorithm : resetGrid}
-              className={`fixed lg:relative bottom-0 left-0 w-screen lg:w-full ${
-                clear ? "bg-green-500" : "bg-red-500"
-              } p-4 text-white lg:rounded-lg`}
-            >
-              {clear ? "Visualize Algorithm" : "Clear Grid"}
-            </button>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+
+      <LandingModal
+        isLandingModalVisibile={isLandingModalVisibile}
+        setIsLandingModalVisibile={setIsLandingModalVisibile}
+      />
+    </>
   );
 }
 
